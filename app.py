@@ -1,3 +1,4 @@
+from flask_cors import CORS
 from flask import Flask, request, send_file
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.pagesizes import LETTER
@@ -7,6 +8,7 @@ from reportlab.lib import colors
 from io import BytesIO
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/generate", methods=["POST"])
 def generate_pdf():
