@@ -91,8 +91,8 @@ def generate_pdf():
                 f"1. Dissolve {powder_grams} g of NatureSeal into {water_liters} liters of cold water.",
                 "2. Submerge produce for 1–5 minutes.",
                 "3. Drain well and refrigerate promptly.",
-                "4. After treating this batch, refrigerate solution immediately.",
-                f"5. If you wish to reuse the solution, add {round(powder_grams / pounds, 1)} g of NatureSeal for every additional pound of produce treated.",
+                "4. After treating this batch, refrigerate the solution immediately.",
+                f"5. To reuse the solution, add {round(powder_grams / pounds, 1)} g of NatureSeal for every additional pound of produce.",
                 "6. Discard solution after 8 hours or if contaminated."
             ]
 
