@@ -31,10 +31,11 @@ def generate_pdf():
         }
 
         powder_lb = pounds * dilution.get(produce, 3.3 / 750)
-        powder_oz = powder_lb * 16
-        powder_grams = round(powder_oz * 28.35, 1)
+        powder_oz = round(powder_lb * 16, 1)
+        powder_grams = powder_oz * 28.35
         water_oz = round(powder_grams * 0.4)
-        water_liters = round(water_oz * 0.0295735, 1)
+        quarts = round(water_oz / 32, 1)
+        tbsp = round(powder_grams * 0.113)
 
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=LETTER, topMargin=120, bottomMargin=70)
@@ -47,14 +48,15 @@ def generate_pdf():
                                               fontSize=16, textColor=brand_blue, spaceAfter=12)))
 
         table_data = [
-            ["Kilograms of Produce", f"{round(pounds * 0.4536, 1)} kg"],
-            ["Grams of NatureSeal", f"{powder_grams} g"],
-            ["Liters of Water Needed", f"{water_liters} L"],
+            ["Pounds of Produce", f"{pounds} lbs"],
+            ["Ounces of NatureSeal", f"{powder_oz:.1f} oz"],
+            ["Tablespoons of NatureSeal", f"{tbsp} tbsp"],
+            ["Water Needed", f"{water_oz} oz (~{quarts} quarts)"],
             ["Recommended Product", "Avocado Blend (1.25 lb)" if produce in ["avocados", "guacamole"]
              else "Standard NatureSeal (3.3 lb)"]
         ]
 
-        table = Table(table_data, colWidths=[220, 260])
+        table = Table(table_data, colWidths=[200, 280])
         table.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), brand_blue),
             ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
@@ -81,18 +83,18 @@ def generate_pdf():
             ]
         elif produce == "avocados":
             instructions = [
-                "1. Dissolve 2 tablespoons of NatureSeal in 240 mL (1 cup) of cold water.",
+                "1. Dissolve 2 tablespoons of NatureSeal in 8 oz (1 cup) of cold water.",
                 "2. Submerge avocado slices for at least 10 minutes.",
                 "3. Stir occasionally to coat all surfaces.",
                 "4. Drain well and refrigerate in sealed container."
             ]
         else:
             instructions = [
-                f"1. Dissolve {powder_grams} g of NatureSeal into {water_liters} liters of cold water.",
+                f"1. Dissolve {powder_oz:.1f} oz ({tbsp} tbsp) of NatureSeal into {water_oz} oz (~{quarts} quarts) of cold water.",
                 "2. Submerge produce for 1–5 minutes.",
                 "3. Drain well and refrigerate promptly.",
                 "4. After treating this batch, refrigerate the solution immediately.",
-                f"5. To reuse the solution, add {round(powder_grams / pounds, 1)} g of NatureSeal for every additional pound of produce.",
+                f"5. To reuse the solution, add {round(powder_oz / pounds, 2)} oz of NatureSeal for every additional pound of produce.",
                 "6. Discard solution after 8 hours or if contaminated."
             ]
 
