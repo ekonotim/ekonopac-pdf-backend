@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file
 from io import BytesIO
 from reportlab.pdfgen import canvas
+import os
 
 app = Flask(__name__)
 
@@ -12,7 +13,7 @@ def generate_pdf():
         produce = data.get("produce", "Unknown")
         pounds = data.get("pounds", "Unknown")
 
-        # Create a basic PDF
+        # Create a basic test PDF
         buffer = BytesIO()
         p = canvas.Canvas(buffer)
         p.setFont("Helvetica-Bold", 16)
@@ -30,5 +31,7 @@ def generate_pdf():
         print("❌ PDF generation error:", str(e))
         return {"error": str(e)}, 500
 
+# Correct port binding for Render
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
