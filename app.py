@@ -30,9 +30,11 @@ def generate_pdf():
             "celery": 3.3 / 710
         }
 
-        cost_per_oz = 4.75 if produce in ["avocados", "guacamole"] else 2.84
-        oz_needed = round(pounds * dilution.get(produce, 3.3 / 750) * 16, 1)
-        cost = round(oz_needed * cost_per_oz, 2)
+        powder_lb = pounds * dilution.get(produce, 3.3 / 750)
+        powder_oz = round(powder_lb * 16, 1)
+        powder_grams = powder_oz * 28.35
+        water_oz = round(powder_grams * 0.4)
+        tbsp = round(powder_grams * 0.113)
 
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=LETTER, topMargin=120, bottomMargin=70)
@@ -46,13 +48,14 @@ def generate_pdf():
 
         table_data = [
             ["Pounds of Produce", f"{pounds} lbs"],
-            ["Ounces of NatureSeal", f"{oz_needed:.1f} oz"],
-            ["Estimated Cost to Treat", f"${cost:.2f}"],
+            ["Ounces of NatureSeal", f"{powder_oz:.1f} oz"],
+            ["Tablespoons of NatureSeal", f"{tbsp} tbsp"],
+            ["Water Needed", f"{water_oz} oz (~{round(water_oz/32, 1)} quarts)"],
             ["Recommended Product", "Avocado Blend (1.25 lb)" if produce in ["avocados", "guacamole"]
              else "Standard NatureSeal (3.3 lb)"]
         ]
 
-        table = Table(table_data, colWidths=[180, 300])
+        table = Table(table_data, colWidths=[200, 280])
         table.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), brand_blue),
             ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
@@ -94,10 +97,11 @@ def generate_pdf():
             ]
         else:
             instructions = [
-                f"1. Dissolve {oz_needed:.1f} oz of NatureSeal into 5 gallons of cold water.",
+                f"1. Dissolve {powder_oz:.1f} oz ({tbsp} tbsp) of NatureSeal into {water_oz} oz of cold water (~{round(water_oz/32, 1)} quarts).",
                 "2. Submerge produce for 1–5 minutes in the solution.",
                 "3. Drain well and refrigerate promptly.",
-                "4. Discard solution after 8 hours or if contaminated."
+                "4. Discard solution after 8 hours or if contaminated.",
+                "5. Recharge solution by adding ¼ oz of NatureSeal after every 10 lbs of produce."
             ]
 
         for step in instructions:
