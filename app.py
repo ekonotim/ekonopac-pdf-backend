@@ -34,6 +34,7 @@ def generate_pdf():
         powder_oz = round(powder_lb * 16, 1)
         powder_grams = powder_oz * 28.35
         water_oz = round(powder_grams * 0.4)
+        quarts = round(water_oz / 32, 1)
         tbsp = round(powder_grams * 0.113)
 
         buffer = BytesIO()
@@ -50,7 +51,7 @@ def generate_pdf():
             ["Pounds of Produce", f"{pounds} lbs"],
             ["Ounces of NatureSeal", f"{powder_oz:.1f} oz"],
             ["Tablespoons of NatureSeal", f"{tbsp} tbsp"],
-            ["Water Needed", f"{water_oz} oz (~{round(water_oz/32, 1)} quarts)"],
+            ["Water Needed", f"{water_oz} oz (~{quarts} quarts)"],
             ["Recommended Product", "Avocado Blend (1.25 lb)" if produce in ["avocados", "guacamole"]
              else "Standard NatureSeal (3.3 lb)"]
         ]
@@ -87,21 +88,13 @@ def generate_pdf():
                 "3. Stir occasionally to coat all surfaces.",
                 "4. Drain well and refrigerate in sealed container."
             ]
-        elif produce == "apples":
-            instructions = [
-                "1. Dissolve 1 cup NatureSeal into 1 gallon of cold water.",
-                "2. Dip apple slices for 1–2 minutes, mixing gently.",
-                "3. Treat up to 33 lbs per gallon. Recharge with 1/4 cup after each 33 lbs.",
-                "4. Discard solution after 132 lbs or 8 hrs refrigerated.",
-                "5. Drain, pack, and store at 36–41°F."
-            ]
         else:
             instructions = [
-                f"1. Dissolve {powder_oz:.1f} oz ({tbsp} tbsp) of NatureSeal into {water_oz} oz of cold water (~{round(water_oz/32, 1)} quarts).",
-                "2. Submerge produce for 1–5 minutes in the solution.",
+                f"1. Dissolve {powder_oz:.1f} oz ({tbsp} tbsp) of NatureSeal into {water_oz} oz (~{quarts} quarts) of cold water.",
+                "2. Submerge produce for 1–5 minutes.",
                 "3. Drain well and refrigerate promptly.",
-                "4. Discard solution after 8 hours or if contaminated.",
-                "5. Recharge solution by adding ¼ oz of NatureSeal after every 10 lbs of produce."
+                "4. Recharge by adding 0.25 oz of NatureSeal after every 10 lbs of produce.",
+                "5. Discard solution after 8 hours or if contaminated."
             ]
 
         for step in instructions:
